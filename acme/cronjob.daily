@@ -1,0 +1,4 @@
+#!/bin/sh
+
+. /cron_env && /dehydrated/dehydrated --cron -t dns-01 -k /app/zwackl_hook.sh && ${ACME_RELOAD_CMD}
+
