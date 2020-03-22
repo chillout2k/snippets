@@ -1,0 +1,3 @@
+[submodule "acme/dehydrated"]
+	path = acme/dehydrated
+	url = https://github.com/dehydrated-io/dehydrated.git
