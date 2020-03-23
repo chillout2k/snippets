@@ -34,16 +34,24 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     exit 1
   fi
   if [ -d /dehydrated ]; then
+    ONELINE=''
+    if [ ! -z "${DDNS01_ONECERT}" ]; then
+      ONELINE='-n'
+    fi
     echo -n "" > /dehydrated/domains.txt
     for fqdn in ${ACME_FQDNS}; do
-      echo "${fqdn}" >> /dehydrated/domains.txt
+      echo "${fqdn}"
+      echo "${ONELINE}" "${fqdn} " >> /dehydrated/domains.txt
       if [ ! -d "/secrets/ssl/${fqdn}" ]; then
         mkdir -p "/secrets/ssl/${fqdn}"
       fi
     done
+    if [ ! -z "${ONELINE}" ]; then
+      echo "" >> /dehydrated/domains.txt
+    fi
     chmod +x /app/zwackl_hook.sh
-    chmod +x /dehydrated/renew_certs
-    ln -f -s /dehydrated/renew_certs /etc/periodic/daily/renew_certs
+#    chmod +x /dehydrated/renew_certs
+#    ln -f -s /dehydrated/renew_certs /etc/periodic/daily/renew_certs
     if [ -z "$(ls -A /dehydrated/accounts)" ]; then
       cd /dehydrated && /dehydrated/dehydrated --register --accept-terms
     fi
