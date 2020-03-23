@@ -40,7 +40,6 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     fi
     echo -n "" > /dehydrated/domains.txt
     for fqdn in ${ACME_FQDNS}; do
-      echo "${fqdn}"
       echo "${ONELINE}" "${fqdn} " >> /dehydrated/domains.txt
       if [ ! -d "/secrets/ssl/${fqdn}" ]; then
         install -d -m 775 "/secrets/ssl/${fqdn}"
@@ -64,7 +63,6 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     if [ ! -z "${RUN_DEHYDRATED}" ]; then
       /dehydrated/dehydrated --cron -t dns-01 -k /app/zwackl_hook.sh
     fi
-    export CROND_ENABLE='acme'
     chmod -R +x /dehydrated/certs
   else
     echo "Directory /dehydrated not found!"
