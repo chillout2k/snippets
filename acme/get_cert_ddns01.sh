@@ -10,7 +10,7 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     exit 1
   fi
   if [ ! -d /secrets/ssl ]; then
-    mkdir -p /secrets/ssl
+    install -d -m 775 /secrets/ssl
   fi
   if [ ! -z "${ACME_STAGING_ENABLED+x}" ]; then
     STAGING_URI='CA="https://acme-staging-v02.api.letsencrypt.org/directory"' \
@@ -40,18 +40,15 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     fi
     echo -n "" > /dehydrated/domains.txt
     for fqdn in ${ACME_FQDNS}; do
-      echo "${fqdn}"
       echo "${ONELINE}" "${fqdn} " >> /dehydrated/domains.txt
       if [ ! -d "/secrets/ssl/${fqdn}" ]; then
-        mkdir -p "/secrets/ssl/${fqdn}"
+        install -d -m 775 "/secrets/ssl/${fqdn}"
       fi
     done
     if [ ! -z "${ONELINE}" ]; then
       echo "" >> /dehydrated/domains.txt
     fi
     chmod +x /app/zwackl_hook.sh
-#    chmod +x /dehydrated/renew_certs
-#    ln -f -s /dehydrated/renew_certs /etc/periodic/daily/renew_certs
     if [ -z "$(ls -A /dehydrated/accounts)" ]; then
       cd /dehydrated && /dehydrated/dehydrated --register --accept-terms
     fi
@@ -66,7 +63,7 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     if [ ! -z "${RUN_DEHYDRATED}" ]; then
       /dehydrated/dehydrated --cron -t dns-01 -k /app/zwackl_hook.sh
     fi
-    export CROND_ENABLE='acme'
+    chmod -R +x /dehydrated/certs
   else
     echo "Directory /dehydrated not found!"
     exit 1
