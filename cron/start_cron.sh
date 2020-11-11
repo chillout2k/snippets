@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # serialize ENV for cron-jobs
 TMP_FILE=/tmp/cron_env
 OUT_FILE=/cron_env
@@ -8,6 +6,10 @@ env > "${TMP_FILE}"
 while read -r line; do
   echo "${line}" | grep -q "^PWD="
   if [ $? = 0 ]; then
+    continue
+  fi
+  if ! [[ ${line} =~ ^[a-zA-Z0-9_]+=.+$ ]]; then
+    echo "$0: Messed up ENV: ${line}"
     continue
   fi
   echo "${line}" | grep -q "\s"
@@ -24,4 +26,3 @@ done <"${TMP_FILE}"
 unlink "${TMP_FILE}"
 # start crond in background
 /usr/sbin/crond -b -S
-
