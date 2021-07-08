@@ -28,8 +28,8 @@ function deploy_challenge {
         echo "OK: ${CMD_OUT}"
     fi
 
-    echo "Sleeping for 66 seconds to avoid timing conflicts"
-    sleep 66
+    echo "Sleeping for 5 seconds to avoid timing conflicts"
+    sleep 5
 }
 
 
