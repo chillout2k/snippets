@@ -63,7 +63,6 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     if [ ! -z "${RUN_DEHYDRATED}" ]; then
       /dehydrated/dehydrated --cron -t dns-01 -k /app/zwackl_hook.sh
     fi
-    chmod -R +x /dehydrated/certs
   else
     echo "Directory /dehydrated not found!"
     exit 1
