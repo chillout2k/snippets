@@ -52,17 +52,11 @@ if [ ! -z "${ACME_FQDNS+x}" ]; then
     if [ -z "$(ls -A /dehydrated/accounts)" ]; then
       cd /dehydrated && /dehydrated/dehydrated --register --accept-terms
     fi
-    RUN_DEHYDRATED=''
     for fqdn in ${ACME_FQDNS}; do
-      if [ ! -f "/dehydrated/certs/${fqdn}/fullchain.pem" ]; then
-        RUN_DEHYDRATED='yes'
-      fi
       ln -f -s "/dehydrated/certs/${fqdn}/privkey.pem" "/secrets/ssl/${fqdn}/key.pem"
       ln -f -s "/dehydrated/certs/${fqdn}/fullchain.pem" "/secrets/ssl/${fqdn}/cert.pem"
     done
-    if [ ! -z "${RUN_DEHYDRATED}" ]; then
-      /dehydrated/dehydrated --cron -t dns-01 -k /app/zwackl_hook.sh
-    fi
+    /dehydrated/dehydrated --cron -t dns-01 -k /app/zwackl_hook.sh
   else
     echo "Directory /dehydrated not found!"
     exit 1
